@@ -25,7 +25,7 @@ locally or in a deployment — only the env vars change.
 # 1. Dealers/reviews microservice (Node + an ephemeral local MongoDB)
 cd database
 npm install
-npm run dev:local            # boots an in-memory MongoDB, seeds it, starts on :3030
+npm start                    # boots an in-memory MongoDB, seeds it, starts on :3030
 
 # 2. Sentiment analysis microservice (Flask)
 cd server

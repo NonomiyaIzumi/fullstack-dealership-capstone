@@ -1,0 +1,54 @@
+services:
+  - type: web
+    name: dealership-sentiment-analyzer
+    runtime: docker
+    plan: free
+    dockerfilePath: ./server/djangoapp/microservices/Dockerfile
+    dockerContext: ./server/djangoapp/microservices
+    envVars:
+      - key: PORT
+        value: 5050
+
+  - type: web
+    name: dealership-database
+    runtime: docker
+    plan: free
+    dockerfilePath: ./database/Dockerfile
+    dockerContext: ./database
+    envVars:
+      - key: PORT
+        value: 3030
+
+  - type: web
+    name: dealership-web
+    runtime: docker
+    plan: free
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_SUPERUSER_USERNAME
+        value: admin
+      - key: DJANGO_SUPERUSER_EMAIL
+        value: admin@carsdealership.example
+      - key: DJANGO_SUPERUSER_PASSWORD
+        generateValue: true
+      - key: BACKEND_URL
+        fromService:
+          type: web
+          name: dealership-database
+          property: url
+      - key: SENTIMENT_ANALYZER_URL
+        fromService:
+          type: web
+          name: dealership-sentiment-analyzer
+          property: url
+      # Render assigns the final https://<name>-XXXX.onrender.com URL only
+      # after first deploy. Set this manually in the Render dashboard once you
+      # know it (Environment tab on the dealership-web service), then redeploy -
+      # otherwise Django admin login will fail CSRF verification.
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false

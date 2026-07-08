@@ -2,14 +2,16 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
+ENV DJANGO_DEBUG=False
+
 COPY pyproject.toml ./
 RUN pip install --no-cache-dir django requests whitenoise gunicorn
 
 COPY . .
 
 RUN python manage.py collectstatic --noinput
+RUN chmod +x entrypoint.sh
 
-ENV DJANGO_DEBUG=False
 EXPOSE 8000
 
-CMD ["gunicorn", "djangoproj.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["./entrypoint.sh"]

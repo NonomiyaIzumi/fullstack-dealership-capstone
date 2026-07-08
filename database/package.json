@@ -4,17 +4,15 @@
   "description": "Node.js/Express + MongoDB microservice storing dealers and reviews for the Cars Dealership capstone project",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "seed": "node populate_mongodb.js",
-    "dev:local": "node start_local.js"
+    "start": "node start_local.js",
+    "start:external-mongo": "node app.js",
+    "seed": "node populate_mongodb.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "mongodb-memory-server": "^10.0.0",
     "mongoose": "^8.6.0"
-  },
-  "devDependencies": {
-    "mongodb-memory-server": "^10.0.0"
   }
 }

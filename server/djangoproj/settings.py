@@ -22,6 +22,11 @@ CSRF_TRUSTED_ORIGINS = [
     if origin.strip()
 ]
 
+# Hosts like Render terminate TLS at a proxy and forward plain HTTP with this
+# header, so Django needs to be told how to recognize an HTTPS request -
+# otherwise request.is_secure() is wrong and CSRF/admin login breaks.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",

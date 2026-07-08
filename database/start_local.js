@@ -1,13 +1,15 @@
 /**
- * Local-only dev entrypoint: boots a real (ephemeral, in-process) MongoDB via
+ * Default entrypoint for this service (used both locally and on the free-tier
+ * deployment): boots a real, ephemeral, in-process MongoDB via
  * mongodb-memory-server, seeds it with the demo dealers/reviews, then starts
- * the Express app against it. Not used in production/deployment, where
- * MONGO_URI should point at a real MongoDB instance (e.g. MongoDB Atlas).
+ * the Express app against it. No external MongoDB account is required. If a
+ * persistent, external MongoDB is available instead, set MONGO_URI and run
+ * `npm run start:external-mongo` in place of this script.
  */
 const { MongoMemoryServer } = require("mongodb-memory-server");
 
 async function main() {
-  const mongod = await MongoMemoryServer.create({ instance: { port: 27117 } });
+  const mongod = await MongoMemoryServer.create();
   process.env.MONGO_URI = mongod.getUri("dealershipsDB");
   console.log(`In-memory MongoDB started at ${process.env.MONGO_URI}`);
 

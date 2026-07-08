@@ -3,11 +3,11 @@ FROM node:20-slim
 WORKDIR /app
 
 COPY package.json ./
-RUN npm install --omit=dev
+RUN npm install
 
 COPY . .
 
 ENV PORT=3030
 EXPOSE 3030
 
-CMD ["node", "app.js"]
+CMD ["npm", "start"]
