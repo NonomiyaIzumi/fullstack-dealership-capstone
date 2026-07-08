@@ -36,16 +36,21 @@ services:
         value: admin@carsdealership.example
       - key: DJANGO_SUPERUSER_PASSWORD
         generateValue: true
-      - key: BACKEND_HOSTPORT
+      # Render's "host" property returns the public hostname's subdomain
+      # label only (e.g. "dealership-database-c6e9"), not a resolvable
+      # internal-network name and not the full domain - settings.py appends
+      # ".onrender.com" and "https://" to reach the service over the public
+      # internet.
+      - key: BACKEND_HOST
         fromService:
           type: web
           name: dealership-database
-          property: hostport
-      - key: SENTIMENT_ANALYZER_HOSTPORT
+          property: host
+      - key: SENTIMENT_ANALYZER_HOST
         fromService:
           type: web
           name: dealership-sentiment-analyzer
-          property: hostport
+          property: host
       # Render assigns the final https://<name>-XXXX.onrender.com URL only
       # after first deploy. Set this manually in the Render dashboard once you
       # know it (Environment tab on the dealership-web service), then redeploy -
