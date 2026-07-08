@@ -99,11 +99,20 @@ STORAGES = {
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # --- Capstone microservice endpoints -------------------------------------------------
-# Node.js/Express + MongoDB service that stores dealers & reviews.
-BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:3030")
-# Flask sentiment-analysis microservice used to score review text.
-SENTIMENT_ANALYZER_URL = os.environ.get(
-    "SENTIMENT_ANALYZER_URL", "http://localhost:5050"
+# Locally these are set as full URLs (BACKEND_URL/SENTIMENT_ANALYZER_URL, with
+# scheme). On Render, render.yaml can only pass a bare hostname between
+# services (fromService: property: host), so BACKEND_HOST/
+# SENTIMENT_ANALYZER_HOST take priority and get "https://" prepended.
+_backend_host = os.environ.get("BACKEND_HOST")
+BACKEND_URL = (
+    f"https://{_backend_host}" if _backend_host
+    else os.environ.get("BACKEND_URL", "http://localhost:3030")
+)
+
+_sentiment_host = os.environ.get("SENTIMENT_ANALYZER_HOST")
+SENTIMENT_ANALYZER_URL = (
+    f"https://{_sentiment_host}" if _sentiment_host
+    else os.environ.get("SENTIMENT_ANALYZER_URL", "http://localhost:5050")
 )
 
 LOGIN_REDIRECT_URL = "/"
